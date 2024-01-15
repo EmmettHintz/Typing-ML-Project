@@ -1,12 +1,5 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { LandingPage } from "@/components/landing-page";
 
 export default function Home() {
-  return (
-    <main>
-      <p className="bg-orange-200">Testing here</p>
-    </main>
-  );
+  return <LandingPage />;
 }
