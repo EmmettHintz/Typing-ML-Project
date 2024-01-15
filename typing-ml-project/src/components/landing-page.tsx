@@ -4,13 +4,15 @@
  */
 import { Button } from "@/components/ui/button"
 
+import TypingTest from "@/components/typing-test"
+
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-[#282a36] text-[#f8f8f2] flex flex-col items-center justify-center p-4">
       <header className="absolute top-0 left-0 right-0 flex justify-between items-center p-4">
         <div className="flex items-center space-x-4">
           <img alt="Logo" className="h-20 invert" src="/Typing-Project-Logo.svg" />
-          <h1 className="text-xl text-[#50fa7b] font-bold">TypeTutor</h1>
+            <h1 className="text-xl text-[#50fa7b] font-bold cursor-pointer hover:scale-105 transition-all duration-300">TypeTutor</h1>
 
           <div className="flex space-x-2 rounded-full bg-[#3a3d4d]">
             <Button className="text-xs text-[#50fa7b]" variant="ghost">
@@ -43,13 +45,11 @@ export function LandingPage() {
         </div>
       </header>
       <main className="flex flex-col items-center justify-center space-y-10 p-10">
-        <h1 className="text-6xl font-bold text-[#50fa7b]">TypeTutor</h1>
-        <p className="text-lg text-[#6272a4]">A machine learning typing tutor</p>
+        <h1 className="text-6xl font-bold cursor-pointer hover:scale-105 transition-all duration-300 text-[#50fa7b]">TypeTutor</h1>
+        <p className="text-2xl text-[#6272a4]">Your Personal Typing Tutor</p>
+        <p className="text-xl text-[#6272a4]">Begin by Taking This Typing Test</p>
         <div className="text-5xl font-mono space-y-4">
-          <p>
-            early when where child must on and call well house small own a at interest own go program form way early old
-            problem be
-          </p>
+          <TypingTest />
         </div>
       </main>
       <footer className="absolute bottom-4">
@@ -67,7 +67,7 @@ export function LandingPage() {
 }
 
 
-function PencilIcon(props) {
+function PencilIcon(props: any) {
   return (
     <svg
       {...props}
@@ -88,7 +88,7 @@ function PencilIcon(props) {
 }
 
 
-function CalculatorIcon(props) {
+function CalculatorIcon(props: any) {
   return (
     <svg
       {...props}
@@ -117,7 +117,7 @@ function CalculatorIcon(props) {
 }
 
 
-function ClockIcon(props) {
+function ClockIcon(props: any) {
   return (
     <svg
       {...props}
@@ -139,7 +139,7 @@ function ClockIcon(props) {
 
 
 
-function WholeWordIcon(props) {
+function WholeWordIcon(props: any) {
   return (
     <svg
       {...props}
@@ -163,7 +163,7 @@ function WholeWordIcon(props) {
 }
 
 
-function QuoteIcon(props) {
+function QuoteIcon(props: any) {
   return (
     <svg
       {...props}
@@ -184,7 +184,7 @@ function QuoteIcon(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props: any) {
   return (
     <svg
       {...props}
@@ -205,7 +205,7 @@ function SearchIcon(props) {
 }
 
 
-function SignalIcon(props) {
+function SignalIcon(props: any) {
   return (
     <svg
       {...props}
@@ -229,7 +229,7 @@ function SignalIcon(props) {
 }
 
 
-function HelpCircleIcon(props) {
+function HelpCircleIcon(props: any) {
   return (
     <svg
       {...props}
