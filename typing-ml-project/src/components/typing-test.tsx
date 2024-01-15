@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function TypingTest() {
   const [text, setText] = useState("Sample Text for Typing Test");
@@ -12,26 +12,87 @@ export default function TypingTest() {
   const [correct, setCorrect] = useState(true);
   const [incorrect, setIncorrect] = useState(false);
 
+  const MAX_CHARS_PER_LINE = 50;
+
+  const words = text.split(" ");
+
+  const textDisplayRef = useRef(null);
+
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    // Focus the element when the component mounts
+    if (textDisplayRef.current) {
+      textDisplayRef.current.focus();
+    }
+  }, []);
+
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+
+  // Handle user input
+  const handleKeyPress = (event: any) => {
+    if (!isRunning) {
+      // Start the test on the first key press
+      setIsRunning(true);
+      setTimer(30); // Reset timer if needed
+    }
+
+    // handle key press logic
+    if (event.key === " ") {
+      event.preventDefault(); // Prevents the default spacebar action (scrolling)
+      setCurrentWordIndex(currentWordIndex + 1);
+      setUserInput("");
+    } else {
+      setUserInput(userInput + event.key);
+    }
+  };
+
+  // Render the text with highlighting
+  const renderText = () => {
+    const words = text.split(" ");
+    return words.map((word, index) => {
+      let className = "";
+      if (index === currentWordIndex) {
+        const isCorrect = userInput.trim() === word;
+        className = isCorrect ? "text-green-400" : "text-red-400";
+      }
+      return (
+        <span key={index} className={className}>
+          {word}{" "}
+        </span>
+      );
+    });
+  };
+
+  useEffect(() => {
+    // Generate initial text when the component mounts
+    generateText();
+  }, []);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+
     if (isRunning && timer > 0) {
       interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     } else if (timer === 0) {
       setIsRunning(false);
-      // Calculate WPM, Accuracy, and Consistency here
-      setWpm(wordsCorrect / 2 / timer);
+      // Calculate WPM and Accuracy here
+      const wordsTyped = userInput.trim().split(/\s+/);
+      const correctWords = wordsTyped.filter(
+        (word, index) => word === text.split(/\s+/)[index]
+      ).length;
+      const timeInMinutes = 0.5; // 30 seconds in minutes
+      setWpm(Math.round((correctWords / timeInMinutes) * 100) / 100);
+
+      // Add accuracy calculation here
     }
     return () => clearInterval(interval);
-  }, [isRunning, timer]);
+  }, [isRunning, timer, userInput, text]);
 
   const handleInputChange = (event: any) => {
     if (!isRunning) return;
     const input = event.target.value;
     setUserInput(input);
-
-    // Add logic for real-time accuracy, WPM calculation here
   };
 
   function generateText(wordCount = 300) {
@@ -384,13 +445,12 @@ export default function TypingTest() {
     let text = "";
 
     for (let i = 0; i < wordCount; i++) {
-        const randomIndex = Math.floor(Math.random() * wordBag.length);
-        text += wordBag[randomIndex] + " ";
+      const randomIndex = Math.floor(Math.random() * wordBag.length);
+      text += wordBag[randomIndex] + " ";
     }
 
     setText(text);
   }
-
 
   const startTest = () => {
     setIsRunning(true);
@@ -400,25 +460,43 @@ export default function TypingTest() {
     setTimer(30);
     setUserInput("");
     setWordsCorrect(0);
-    setCorrect(true);
+    setCorrect(false);
     setIncorrect(false);
     generateText();
+    // Focus the text display element
+    if (textDisplayRef.current) {
+      textDisplayRef.current.focus();
+    }
   };
 
   return (
     <div>
-      <h1>Typing Test</h1>
-      <textarea
-        value={userInput}
-        className="text-black"
-        onChange={handleInputChange}
-      />
-      <p>{text}</p>
+      {text && (
+        <div
+          className="text-display border-transparent outline-none"
+          tabIndex={0}
+          onKeyDown={handleKeyPress}
+          autoFocus
+        >
+          {renderText()}
+        </div>
+      )}
 
-      <p>Timer: {timer}</p>
-      <p>WPM: {wpm}</p>
-      <p>Accuracy: {accuracy}</p>
-      <p>Consistency: {consistency}</p>
+      {isRunning && <p>Timer: {timer}</p>}
+
+      {!isRunning && timer === 0 && (
+        <div className="results">
+          <p>WPM: {wpm}</p>
+          <p>Accuracy: {accuracy}%</p>
+          <p>Consistency: {consistency}%</p>
+        </div>
+      )}
+
+      {!isRunning && (
+        <button onClick={startTest} className="start-button">
+          Start Test
+        </button>
+      )}
     </div>
   );
 }
