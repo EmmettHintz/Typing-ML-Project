@@ -6,4 +6,6 @@
 
 This project is my first large scale passion project, mixing my experience in web development with my interest in machine learning.  
 
-The goal of this project is to create a web application that can be used to orchestrate a typing test for the user to collect data as to how the user types, then subsequently use that data to train a machine learning model to give the user feedback on how to improve their typing, by taking in metrics such as wpm, accuracy, and consistency.  
+The project aims to engage the user in a 30-second typing test (inspired by https://monkeytype.com/), gaining metrics on words-per-minute, accuracy, and consistency as they type. The next part I look towards developing is feeding these metrics and keystrokes to a machine-learning algorithm that will recognize patterns in the user’s typing and provide further targeted practice to strengthen their typing habits.  
+
+The project is currently in its early stages, with the typing test being the only feature implemented. I will be polishing up the interface, then the next step is to implement the machine learning model, which will be a challenge as I will be learning as I work on my implementation.  
