@@ -1,6 +1,6 @@
 # Typing-ML-Project
 
-![Demo Image](./typing-ml-project/public/README-Demo.png)  
+![Demo Image](typing-ml-project/public/ReadMe-Demo.png)  
 
 ## Project Description
 
