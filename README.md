@@ -1,6 +1,6 @@
 # Typing-ML-Project
 
-![Alt text](/ReadMe-Demo.png?raw=true "Optional Title")
+![Alt text](/Public/ReadMe-Demo.png?raw=true "Optional Title")
 
 ## Project Description
 
