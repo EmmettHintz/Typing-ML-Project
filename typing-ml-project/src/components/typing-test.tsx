@@ -580,7 +580,7 @@ export default function TypingTest() {
       {isRunning && <p>Timer: {timer}</p>}
       {text && (
         <div
-          className="text-display border-transparent text-center outline-none"
+          className="text-display border-transparent p-4 text-center outline-none"
           tabIndex={0}
           onKeyDown={handleKeyPress}
           autoFocus
