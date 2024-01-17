@@ -1,5 +1,7 @@
 # Typing-ML-Project
 
+![Image](/ReadMe-Demo.png)  
+
 ## Project Description
 
 This project is my first large scale passion project, mixing my experience in web development with my interest in machine learning.  
