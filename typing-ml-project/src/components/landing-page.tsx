@@ -1,5 +1,5 @@
 /**
- * v0 by Vercel.
+ * Initial static design and icons assisted by v0 by Vercel. Adapted by myself to suit the project.
  * @see https://v0.dev/t/pY5g2fO3bZc
  */
 import { Button } from "@/components/ui/button"
@@ -52,9 +52,11 @@ export function LandingPage() {
       <footer className="absolute bottom-4">
         <div className="flex space-x-2 text-sm">
           <Button className="text-[#aa9e9f] hover:bg-[#282538] hover:text-[#e0def4]" variant="ghost">
+            {/* Implement next */}
             tab + enter - restart test
           </Button>
           <Button className="text-[#aa9e9f] hover:bg-[#282538] hover:text-[#e0def4]" variant="ghost">
+            {/* Implement next */}
             esc or cmd + shift + p - command line
           </Button>
         </div>
