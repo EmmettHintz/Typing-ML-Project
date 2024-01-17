@@ -45,7 +45,6 @@ export function LandingPage() {
       <main className="flex flex-col items-center justify-center space-y-4">
         <h1 className="text-6xl text-[#eb6f92] cursor-pointer hover:scale-105 transition-all duration-300 font-bold">TypingTutor</h1>
         <p className="text-3xl cursor-default text-[#e0def4]">A machine learning typing tutor</p>
-        <p className="text-xl cursor-default text-[#e0def4]">Begin This 30 Second Test to Begin Learning</p>
         <div className="text-5xl font-mono space-y-4">
           <TypingTest />
         </div>
