@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { transpileModule } from "typescript";
 
 export default function TypingTest() {
   const [text, setText] = useState("Sample Text for Typing Test");
@@ -12,7 +13,14 @@ export default function TypingTest() {
   const [correct, setCorrect] = useState(true);
   const [incorrect, setIncorrect] = useState(false);
 
-  const MAX_CHARS_PER_LINE = 50;
+  const MAX_CHARS_PER_LINE = 35;
+  const MAX_WORDS_PER_LINE = 5;
+  const LINES_TO_DISPLAY = 3;
+
+  const averageWordLength =
+    text.split(" ").reduce((acc, word) => acc + word.length, 0) /
+    text.split(" ").length;
+  const wordsPerLine = Math.floor(MAX_CHARS_PER_LINE / averageWordLength);
 
   const words = text.split(" ");
 
@@ -27,17 +35,18 @@ export default function TypingTest() {
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
+  const [currentCharPosition, setCurrentCharPosition] = useState(0);
+
   // Handle user input
   const handleKeyPress = (event: any) => {
     if (!isRunning) {
-      // Start the test on the first key press
       setIsRunning(true);
-      setTimer(30); // Reset timer if needed
+      setTimer(30);
     }
-
-    // handle key press logic
     if (event.key === " ") {
-      event.preventDefault(); // Prevents the default spacebar action (scrolling)
+      // Prevent space from moving the page down
+      event.preventDefault();
+      // Move to the next word and reset chararcter position
       setCurrentWordIndex(currentWordIndex + 1);
       setUserInput("");
     } else {
@@ -45,23 +54,120 @@ export default function TypingTest() {
     }
   };
 
-  // Render the text with highlighting
   const renderText = () => {
-    const words = text.split(" ");
-    return words.map((word, index) => {
-      let className = "";
-      if (index === currentWordIndex) {
-        const isCorrect = userInput.trim() === word;
-        className = isCorrect ? "text-green-400" : "text-red-400";
+    const lines = []; // This will hold all the lines of text
+    let currentLine = ""; // This holds the text for the current line
+    let charCount = 0; // This keeps track of the number of characters in the current line
+    let visibleStartIndex = 0; // This determines the index of the first visible line
+
+    // Split the entire text into words and iterate through them
+    text.split(" ").forEach((word, index) => {
+      // Check if adding the next word would exceed the max characters per line
+      if (charCount + word.length > MAX_CHARS_PER_LINE) {
+        lines.push(currentLine); // If so, push the current line to the lines array
+        currentLine = word + " "; // Start a new line with the current word
+        charCount = word.length + 1; // Reset the character count for the new line
+      } else {
+        currentLine += word + " "; // If not, add the word to the current line
+        charCount += word.length + 1; // Update the character count
       }
-      return (
-        <span key={index} className={className}>
-          {word}{" "}
-        </span>
-      );
+
+      // If the current word index matches the index being processed
+      // and we've filled at least two lines, update the start index for visibility
+      if (index === currentWordIndex && lines.length >= 2) {
+        visibleStartIndex = lines.length - 2;
+      }
     });
+
+     // When the currentWordIndex reaches the end of the second line, shuffle the rows
+  if (currentLineComplete()) { // You will need to define currentLineComplete()
+    shuffleRows(); // You will need to define shuffleRows()
+    addNewLine(); // You will need to define addNewLine()
+  }
+
+    // If there's text in the current line that hasn't been added to lines, add it
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    /// Determine the current character index within the current word
+    const currentCharIndex = userInput.length;
+
+    // Map the visible lines to JSX paragraphs
+    return lines
+      .slice(visibleStartIndex, visibleStartIndex + LINES_TO_DISPLAY)
+      .map((line, lineIndex) => {
+        const wordsInLine = line.split(" "); // Split the current line into words
+        return (
+          <p key={lineIndex} className="whitespace-pre-wrap">
+            {wordsInLine.map((word, wordIndex) => {
+              // Calculate the global index of the current word
+              const actualIndex = words.findIndex(
+                (w, i) =>
+                  i >= wordIndex + visibleStartIndex * wordsPerLine &&
+                  w === word
+              );
+              let className = "inline"; // Default style for all words
+              let displayWord = word; // Default display
+
+              // Check if the word is the current word user is typing
+              if (actualIndex === currentWordIndex) {
+                // Style for the current word
+                className +=
+                  userInput === word ? " text-green-500" : " text-red-500";
+
+                // Insert the cursor within the current word at the correct position
+                const beforeCursor = word.slice(0, currentCharIndex);
+                const afterCursor = word.slice(currentCharIndex);
+                const displayWord = (
+                  <>
+                    <span className={className}>{beforeCursor}</span>
+                    <span className="cursor">|</span>
+                    {afterCursor}
+                  </>
+                );
+              } else if (actualIndex < currentWordIndex) {
+                // If the word has been typed, style it as such
+                className += " text-gray-500";
+              }
+
+              return (
+                <span
+                  key={wordIndex}
+                  className={`mr-1 inline-block ${className}`}
+                >
+                  {displayWord}&nbsp;
+                  {/* Ensure there is a space after each word */}
+                </span>
+              );
+            })}
+          </p>
+        );
+      });
   };
 
+  // This function will check iuf the current line typing is complete
+  function currentLineComplete() {
+    return true;
+    // Logic to determine if the user has completed typing the second line
+  }
+
+  // This function will handle the logic of shuffling the rows up
+  function shuffleRows() {
+    // Logic to shuffle the rows up
+  }
+
+  // This function will add a new line as the third row
+  function addNewLine() {
+    // Logic to add a new line
+  }
+
+  // This function would return the lines that need to be displayed
+  function getDisplayedLines() {
+
+  }
+
+  
   useEffect(() => {
     // Generate initial text when the component mounts
     generateText();
@@ -471,9 +577,10 @@ export default function TypingTest() {
 
   return (
     <div>
+      {isRunning && <p>Timer: {timer}</p>}
       {text && (
         <div
-          className="text-display border-transparent outline-none"
+          className="text-display border-transparent text-center outline-none"
           tabIndex={0}
           onKeyDown={handleKeyPress}
           autoFocus
@@ -481,8 +588,6 @@ export default function TypingTest() {
           {renderText()}
         </div>
       )}
-
-      {isRunning && <p>Timer: {timer}</p>}
 
       {!isRunning && timer === 0 && (
         <div className="results">
@@ -494,7 +599,7 @@ export default function TypingTest() {
 
       {!isRunning && (
         <button onClick={startTest} className="start-button">
-          Start Test
+          begin test
         </button>
       )}
     </div>
